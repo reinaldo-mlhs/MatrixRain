@@ -43,6 +43,7 @@ class Controller {
           () => {
             // convert image file to base64 string
             controller.uploadedImage = reader.result;
+            noLoop();
             setup();
           },
           false
