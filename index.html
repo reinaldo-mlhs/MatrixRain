@@ -1,13 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/addons/p5.sound.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <meta charset="utf-8" />
 
-  </head>
-  <body>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/p5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.2.0/addons/p5.sound.min.js"></script>
+  <script src="controller.js"></script>
+  <script src="utility.js"></script>
+  <script src="matrix.js"></script>
+  <link rel="stylesheet" type="text/css" href="css-reset.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <meta charset="utf-8" />
+
+</head>
+
+<body>
+  <div id="main-content">
+
+    <div class="options-div">
+
+      <div class="field">
+        <div>Threshold Filter: </div>
+        <input type="range" min="0" max="100" value="10" id="threshold">
+      </div>
+
+      <div class="field">
+        <div>Matrix Resolution: </div>
+        <input type="range" min="10" max="200" value="60" id="resolution">
+      </div>
+
+      <div class="field">
+        <div>Trail Length: </div>
+        <input type="range" min="1" max="20" value="15" id="trailLength">
+      </div>
+
+    </div>
+
+    <div class="options-div">
+
+      <div class="field">
+        <div>Show Matrix</div>
+        <label class="switch">
+          <input type="checkbox" id="onOff">
+          <span class="toggle-slider round"></span>
+        </label>
+      </div>
+
+      <div class="field">
+        <div>Upload Image</div>
+        <input type="file" />
+      </div>
+      
+    </div>
+
     <script src="sketch.js"></script>
-  </body>
+
+  </div>
+</body>
+
 </html>

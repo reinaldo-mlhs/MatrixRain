@@ -1,57 +1,75 @@
-const w = 800;
-const h = 400;
-const rez = 40;
-const trailLength = 15;
 
-let trails = [];
-const cells = [];
-const characters = 'abcdefghijklmnopqrstuvwxyz0123456789<>?&%$#!/';
+let w = 1000;
+let h = 700;
+let img;
+let imgThresholdPixels = [];
 
-for (let x = 0; x < rez; x++){
-  cells.push([]);
-  for (let y = 0; y < rez; y++){
-    const randomChar = characters.charAt(Math.floor(Math.random() * characters.length));
-    cells[x].push(randomChar);
+const controller = new Controller();
+const matrix = new Matrix(controller.resolution);
+
+function handleImageLoad() {
+  console.log("image loaded...")
+
+  matrix.buildCharacterCells(controller.resolution);
+  img.filter(THRESHOLD, controller.threshold);
+
+  w = img.width;
+  h = img.height;
+  console.log("image resolution", w, h);
+  // img.resize(w, h);
+  img.loadPixels();
+
+  imgThresholdPixels = [];
+
+  createCanvas(w, h);
+  frameRate(15);
+
+  let imgThresholdPixelsTemp = [];
+  let count = 0;
+  for (let i = 0; i < img.pixels.length; i++) {
+    if (count === 1) {
+      imgThresholdPixelsTemp.push(Math.floor((img.pixels[i - 1] + img.pixels[i] + img.pixels[i + 1]) / 3));
+    }
+    if (count === 3) {
+      count = 0;
+    }
+    else {
+      count++;
+    }
   }
+
+  imgThresholdPixels = []
+  const chunkSize = w;
+  for (let i = 0; i < imgThresholdPixelsTemp.length; i += chunkSize) {
+    const chunk = imgThresholdPixelsTemp.slice(i, i + chunkSize);
+    imgThresholdPixels.push(chunk);
+  }
+
+  loop();
 }
 
-
-function createTrail(){
-  return {
-    column: Math.floor(Math.random() * rez),
-    row: 0
-  }
+function handleImageFail() {
+  console.log("image failed to load...")
 }
 
 function setup() {
-  createCanvas(w, h);
-  frameRate(10);
-  let trail_1 = createTrail();
-  trails.push(trail_1)
+
+  if (!controller.uploadedImage) {
+    noLoop();
+    return;
+  }
+
+  img = loadImage(controller.uploadedImage, handleImageLoad, handleImageFail);
+  
 }
 
 function draw() {
-  background(0);
-  for(let t of trails){
-    for(let i = 0; i < trailLength; i++){
-      const opacity = 1.5 - (i*0.1);
-      push();
-      fill(`rgba(0,255,0, ${opacity})`); 
-      text(cells[t.column][t.row - i], t.column * (w/rez), (t.row - i) * (h/rez)); 
-      pop();
-    }
-    t.row += 1;
-    if(t.row > (rez + trailLength)){
-      trails.shift();
-    }
+  // console.log(img.get(mouseX, mouseY));
+  if (controller.onOff === true) {
+    matrix.draw(controller.resolution, imgThresholdPixels);
   }
-  trails.push(createTrail())
-  trails.push(createTrail())
-  trails.push(createTrail())
-  trails.push(createTrail())
+  else {
+    image(img, 0, 0);
+  }
 }
-
-
-
-
 
